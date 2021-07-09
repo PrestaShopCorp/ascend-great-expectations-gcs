@@ -27,7 +27,7 @@ In the advanced settings> Runtime settings > container image URL set the correct
 
 Then in the "Custom Spark Params" click on "require credentials" and chose you credential previously uploaded "great_expectations_sa".
 
-## write the PySpark transform
+## Write the PySpark transform
 
 ```python
 # import the custom package
