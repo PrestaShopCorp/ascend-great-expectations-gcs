@@ -5,11 +5,9 @@ from great_expectations.data_context import BaseDataContext
 from great_expectations.data_context.types.base import DataContextConfig
 
 class Validator:
-    def __init__(self,name: str ="name", gcp_project:str ="project",bucket: str="my_bucket", credentials: str="{{}}",asset_name:str="asset_name",temp_table_name:str="ge_temp"):
+    def __init__(self,name: str ="name", gcp_project:str ="project",bucket: str="my_bucket", credentials: str="{{}}"):
         self._name = name
         self._gcp_project = gcp_project
-        self._temp_table_name = temp_table_name
-        self._asset_name = asset_name
         self._context = self._create_data_context(bucket)
         self._authenticate(credentials)
 
@@ -118,14 +116,12 @@ class Validator:
             batch_request = RuntimeBatchRequest(
                 datasource_name="df",
                 data_connector_name="df",
-                data_asset_name=self._asset_name,
+                data_asset_name=self._name,
                 runtime_parameters={
                     "batch_data": df
                 },
                 batch_identifiers= {"pipeline_stage": "staging", "run_id": run_id},
-                batch_spec_passthrough={
-                    "bigquery_temp_table": self._temp_table_name
-                }
+                batch_spec_passthrough={}
             )
             return batch_request
 
