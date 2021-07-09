@@ -6,4 +6,4 @@ COPY .  /tmp/pypkg/ascend
 
 RUN pip install /tmp/pypkg/ascend
 
-
+ENV PYTHONPATH="/tmp/pypkg/ascend:${PYTHONPATH}"
