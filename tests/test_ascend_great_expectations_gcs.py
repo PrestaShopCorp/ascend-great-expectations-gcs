@@ -24,7 +24,7 @@ class TestValidator:
             validator.expect_column_values_to_not_be_null("language")
         return register_expectations
 
-    def test_validator(self):
+    def test_run(self):
         validator = self.make_validator()
 
         expectations = self.make_expectations()
@@ -32,3 +32,7 @@ class TestValidator:
 
         df = self.make_df()
         validator.run(df)
+
+    def test_build_data_docs(self):
+        validator = self.make_validator()
+        validator.build_data_docs()
