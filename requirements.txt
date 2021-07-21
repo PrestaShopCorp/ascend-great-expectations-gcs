@@ -1,0 +1,6 @@
+great-expectations
+google-cloud-storage
+pyspark
+pandas
+autopep8
+pytest

@@ -1,8 +1,1 @@
-/env/
-
-__pycache__/
-
-/examples/
-notes.md
-
-test.py
+tests/

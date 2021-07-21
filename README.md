@@ -31,7 +31,7 @@ Then in the "Custom Spark Params" click on "require credentials" and chose you c
 
 ```python
 # import the custom package
-from ascend_great_expectations_gcs import Validator
+from ascend_great_expectations_gcs.validator import Validator
 
 # lets admit we are working on a "customer" table, write the expectations in specific function
 def expectations(validator):
@@ -48,11 +48,8 @@ def transform(spark_session: SparkSession, inputs: List[DataFrame], credentials=
         gcp_project=PROJECT, # your GCP project
         bucket=BUCKET, # the name of your GCP bucket, for example "great_expectations_store"
         credentials=credentials, # credentials from the transform callback
-        asset_name=DATA_ASSET_NAME, # asset_name, make him UNIQUE
-        temp_table_name=TEMP_TABLE_NAME # temp table name for BigQuery
     )
     validator.add_expectations(expectations)
     validator.run(df)
     return df
-
 ```
