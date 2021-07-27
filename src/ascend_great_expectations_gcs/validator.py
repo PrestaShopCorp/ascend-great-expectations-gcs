@@ -11,11 +11,11 @@ import os
 
 class GEValidator:
     def __init__(self, name: str, gcp_project: str, bucket: str, credentials: str = None):
+        if credentials is not None:
+            self._authenticate(credentials)
         self._name = name
         self._context = self._create_data_context(gcp_project, bucket)
         self._suite = self._create_expectation_suite(self._name)
-        if credentials is not None:
-            self._authenticate(credentials)
 
     def _authenticate(self, credentials: str, file_name="/tmp/google_credentials.json"):
         with open(file_name, "w") as file:
