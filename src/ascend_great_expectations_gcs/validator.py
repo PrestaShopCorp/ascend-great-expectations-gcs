@@ -31,7 +31,7 @@ class GEValidator:
         credentials = json.loads(credentials)
         env = credentials["client_email"].split("@")[0].split("-")[1]
 
-    def _map_gcp_project(env: str) -> str:
+    def _map_gcp_project(self, env: str) -> str:
         if env == "dev":
             project = "ps-data-dev-ge"
         elif env == "staging":
@@ -43,7 +43,7 @@ class GEValidator:
 
         return project
 
-    def _map_bucket(env: str) -> str:
+    def _map_bucket(self, env: str) -> str:
         if env == "dev":
             bucket = "ps-data-dev-ge"
         elif env == "staging":
