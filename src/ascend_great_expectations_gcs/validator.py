@@ -5,22 +5,55 @@ from great_expectations.data_context import DataContext, BaseDataContext
 from great_expectations.data_context.types.base import DataContextConfig
 from pyspark.sql import DataFrame
 from typing import Callable, List
+import json
 import uuid
 import os
 
 
 class GEValidator:
-    def __init__(self, name: str, gcp_project: str, bucket: str, credentials: str = None):
-        if credentials is not None:
-            self._authenticate(credentials)
+    def __init__(self, name: str, credentials: str = None):
+        if credentials is None:
+            raise ValueError("Credentials not found.")
+
+        env = self._authenticate(credentials)
+        gcp_project = self._map_gcp_project(env)
+        bucket = self._map_bucket(env)
+
         self._name = name
         self._context = self._create_data_context(gcp_project, bucket)
         self._suite = self._create_expectation_suite(self._name)
 
-    def _authenticate(self, credentials: str, file_name="/tmp/google_credentials.json"):
+    def _authenticate(self, credentials: str, file_name="/tmp/google_credentials.json") -> str:
         with open(file_name, "w") as file:
             print(credentials, file=file)
         os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = file_name
+
+        credentials = json.loads(credentials)
+        env = credentials["client_email"].split("@")[0].split("-")[1]
+
+    def _map_gcp_project(env: str) -> str:
+        if env == "dev":
+            project = "ps-data-dev-ge"
+        elif env == "staging":
+            project = "ps-data-nprod-ge"
+        elif env == "prod":
+            project = "ps-data-prod-ge"
+        else:
+            raise ValueError(f"Unknown environment: {env}")
+
+        return project
+
+    def _map_bucket(env: str) -> str:
+        if env == "dev":
+            bucket = "ps-data-dev-ge"
+        elif env == "staging":
+            bucket = "ps-data-nprod-ge"
+        elif env == "prod":
+            bucket = "ps-data-prod-ge"
+        else:
+            raise ValueError(f"Unknown environment: {env}")
+
+        return bucket
 
     def _create_data_context_config(self,
                                     gcp_project: str,
