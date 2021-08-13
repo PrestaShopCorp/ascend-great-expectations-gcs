@@ -6,11 +6,14 @@ from ascend_great_expectations_gcs.validator import GEValidator
 
 os.environ["DATABRICKS_RUNTIME_VERSION"] = "ASCEND"
 
+with open(".secrets/credentials.json", "r") as file:
+    credentials = file.read()
+
 
 class TestValidator:
-    def make_validator(self) -> GEValidator:
-        validator = GEValidator(
-            name="demo", gcp_project="ps-data-private-remi", bucket="ps-data-private-remi-dev-ge")
+    def make_validator(self, credentials=credentials) -> GEValidator:
+        validator = GEValidator(name="demo", credentials=credentials,
+                                credentials_file_name="tmp/google_credentials.json")
         return validator
 
     def make_df(self):

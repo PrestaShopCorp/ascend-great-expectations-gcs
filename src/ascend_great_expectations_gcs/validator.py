@@ -12,18 +12,18 @@ import os
 
 
 class GEValidator:
-    def __init__(self, name: str, credentials: str = None):
+    def __init__(self, name: str, credentials: str = None, credentials_file_name="/tmp/google_credentials.json"):
         if credentials is None:
             raise ValueError("Credentials not found.")
 
-        config = self._authenticate(credentials)
+        config = self._authenticate(credentials, credentials_file_name)
         gcp_project, bucket = self._parse_config(config)
 
         self._name = name
         self._context = self._create_data_context(gcp_project, bucket)
         self._suite = self._create_expectation_suite(self._name)
 
-    def _authenticate(self, credentials: str, file_name="/tmp/google_credentials.json") -> dict[str, Any]:
+    def _authenticate(self, credentials: str, file_name: str) -> dict[str, Any]:
         credentials = json.loads(credentials)
 
         google_credentials = credentials.get("google_credentials")
@@ -31,7 +31,7 @@ class GEValidator:
             raise ValueError("Missing Google credentials")
 
         with open(file_name, "w") as file:
-            print(google_credentials, file=file)
+            print(json.dumps(google_credentials), file=file)
         os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = file_name
 
         config = credentials.get("config")
@@ -40,7 +40,7 @@ class GEValidator:
 
         return config
 
-    def _parse_config(config: dict[str, Any]) -> tuple[str, str]:
+    def _parse_config(self, config: dict[str, Any]) -> tuple[str, str]:
         config = config.get("great_expectations")
         if config is None:
             raise ValueError("Missing Great Expectations config")
@@ -172,7 +172,7 @@ class GEValidator:
 
     def run(self, df: DataFrame, run_id: str = None):
         if run_id is None:
-            run_id = str(uuid.uuid1())
+            run_id = uuid.uuid4().hex
 
         batch_request = self._create_batch_request(df, run_id)
         validator = self._get_validator(batch_request)
