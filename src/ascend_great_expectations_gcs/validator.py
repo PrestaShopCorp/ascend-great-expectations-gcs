@@ -5,6 +5,7 @@ from great_expectations.data_context import DataContext, BaseDataContext
 from great_expectations.data_context.types.base import DataContextConfig
 from pyspark.sql import DataFrame
 from typing import Callable, List
+from typing import Any
 import json
 import uuid
 import os
@@ -15,46 +16,44 @@ class GEValidator:
         if credentials is None:
             raise ValueError("Credentials not found.")
 
-        env = self._authenticate(credentials)
-        gcp_project = self._map_gcp_project(env)
-        bucket = self._map_bucket(env)
+        config = self._authenticate(credentials)
+        gcp_project, bucket = self._parse_config(config)
 
         self._name = name
         self._context = self._create_data_context(gcp_project, bucket)
         self._suite = self._create_expectation_suite(self._name)
 
-    def _authenticate(self, credentials: str, file_name="/tmp/google_credentials.json") -> str:
+    def _authenticate(self, credentials: str, file_name="/tmp/google_credentials.json") -> dict[str, Any]:
+        credentials = json.loads(credentials)
+
+        google_credentials = credentials.get("google_credentials")
+        if google_credentials is None:
+            raise ValueError("Missing Google credentials")
+
         with open(file_name, "w") as file:
-            print(credentials, file=file)
+            print(google_credentials, file=file)
         os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = file_name
 
-        credentials = json.loads(credentials)
-        env = credentials["client_email"].split("@")[0].split("-")[1]
-        return env
+        config = credentials.get("config")
+        if config is None:
+            raise ValueError("Missing config")
 
-    def _map_gcp_project(self, env: str) -> str:
-        if env == "dev":
-            project = "ps-data-dev-ge"
-        elif env == "staging":
-            project = "ps-data-nprod-ge"
-        elif env == "prod":
-            project = "ps-data-prod-ge"
-        else:
-            raise ValueError(f"Unknown environment: {env}")
+        return config
 
-        return project
+    def _parse_config(config: dict[str, Any]) -> tuple[str, str]:
+        config = config.get("great_expectations")
+        if config is None:
+            raise ValueError("Missing Great Expectations config")
 
-    def _map_bucket(self, env: str) -> str:
-        if env == "dev":
-            bucket = "ps-data-dev-ge"
-        elif env == "staging":
-            bucket = "ps-data-nprod-ge"
-        elif env == "prod":
-            bucket = "ps-data-prod-ge"
-        else:
-            raise ValueError(f"Unknown environment: {env}")
+        project = config.get("project")
+        if project is None:
+            raise ValueError("Missing Great Expectations project")
 
-        return bucket
+        bucket = config.get("bucket")
+        if bucket is None:
+            raise ValueError("Missing Great Expectations bucket")
+
+        return project, bucket
 
     def _create_data_context_config(self,
                                     gcp_project: str,
