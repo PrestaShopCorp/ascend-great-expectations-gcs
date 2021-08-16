@@ -29,7 +29,6 @@ class GEValidator:
         google_credentials = credentials.get("google_credentials")
         if google_credentials is None:
             raise ValueError("Missing Google credentials")
-
         with open(file_name, "w") as file:
             print(json.dumps(google_credentials), file=file)
         os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = file_name
