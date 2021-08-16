@@ -23,7 +23,7 @@ class GEValidator:
         self._context = self._create_data_context(gcp_project, bucket)
         self._suite = self._create_expectation_suite(self._name)
 
-    def _authenticate(self, credentials: str, file_name: str) -> dict[str, Any]:
+    def _authenticate(self, credentials: str, file_name: str):
         credentials = json.loads(credentials)
 
         google_credentials = credentials.get("google_credentials")
@@ -39,7 +39,7 @@ class GEValidator:
 
         return config
 
-    def _parse_config(self, config: dict[str, Any]) -> tuple[str, str]:
+    def _parse_config(self, config):
         config = config.get("great_expectations")
         if config is None:
             raise ValueError("Missing Great Expectations config")
