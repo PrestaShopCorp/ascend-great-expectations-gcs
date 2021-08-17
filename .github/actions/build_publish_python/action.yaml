@@ -30,7 +30,7 @@ runs:
   
   - name: Set package version
     shell: bash
-    id : python_package_vars
+    id : python_package
     run: |
       curl -s 'https://pypi.org/pypi/${{ inputs.package-name }}/json' > /tmp/version.json
       echo "::set-output name=package_version::$(cat /tmp/version.json | jq -r .info.version)"
