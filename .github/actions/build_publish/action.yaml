@@ -1,0 +1,36 @@
+name: 'Build and publish python package'
+description: 'Build and publish python package'
+inputs:
+  pypi-token:
+    required: true
+    description: "Pypi api token"
+    default: ""
+  package-name:
+    required: true
+    description: "package name"
+    default: ""
+
+runs:
+  using: "composite"
+  steps:
+  - name: Set up Python 3.7
+    uses: actions/setup-python@v2
+    with:
+      python-version: '3.7'
+
+  - name: Install dependencies
+    run: python -m pip install --upgrade pip setuptools wheel twine build
+
+  - name: Build python package
+    run: python -m build
+
+  - name: Publish python package
+    env: 
+      TWINE_PASSWORD : ${{ inputs.pypi-token }}
+    run: python -m twine upload -u __token__ --non-interactive  --skip-existing --repository-url https://upload.pypi.org/legacy/ dist/*
+  
+  - name: Set package version
+    id : python_package_vars
+    run: |
+      curl -s 'https://pypi.org/pypi/${{ inputs.package-name }}/json' > /tmp/version.json
+      echo "::set-output name=package_version::$(cat /tmp/version.json | jq -r .info.version)"
