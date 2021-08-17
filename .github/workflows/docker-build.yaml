@@ -40,7 +40,7 @@ jobs:
     - name: Set package version
       run: |
         curl -s 'https://pypi.org/pypi/ascend-great-expectations-gcs/json' > /tmp/package.json
-        PACKAGE_VERSION = python3 -c "import sys, json; print(json.load('/tmp/package.json')['info']['version'])")
+        PACKAGE_VERSION = python3 -c "import sys, json; print(json.load('/tmp/package.json')['info']['version'])"
         echo "$PACKAGE_VERSION"
 
     # - name: Docker meta
