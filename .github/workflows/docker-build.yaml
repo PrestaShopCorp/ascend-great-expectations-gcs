@@ -29,7 +29,7 @@ jobs:
     - name: Buil python package
       run: python -m build
     - name: Buil python package
-      run: python -m twine upload -u prestashopcorp - p ${{ secrets.PYPI_API_TOKEN }} dist/*
+      run: python -m twine upload -u prestashopcorp -p ${{ secrets.PYPI_API_TOKEN }} dist/*
 
     # - name: Docker meta
     #   id: meta
