@@ -29,7 +29,9 @@ jobs:
     - name: Buil python package
       run: python -m build
     - name: Buil python package
-      run: python -m twine upload -u prestashopcorp -p ${{ secrets.PYPI_API_TOKEN }} dist/*
+      env: 
+        TWINE_PASSWORD : ${{ secrets.PYPI_API_TOKEN }}
+      run: python -m twine upload -u prestashopcorp  --non-interactive --repository-url https://upload.pypi.org/legacy/ dist/*
 
     # - name: Docker meta
     #   id: meta
