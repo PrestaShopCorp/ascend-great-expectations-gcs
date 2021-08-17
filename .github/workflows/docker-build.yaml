@@ -25,9 +25,11 @@ jobs:
       with:
         python-version: '3.7'
     - name: Install dependencies
-      run: python -m pip install --upgrade pip setuptools wheel twine
+      run: python -m pip install --upgrade pip setuptools wheel twine build
     - name: Buil python package
       run: python -m build
+    - name: Buil python package
+      run: python -m twine -u prestashopcorp - p ${{ secrets.PYPI_API_TOKEN }} upload  dist/*
 
     # - name: Docker meta
     #   id: meta
