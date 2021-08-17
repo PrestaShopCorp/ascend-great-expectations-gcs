@@ -1,0 +1,68 @@
+name: 'Build application'
+description: 'Build project and push to gcp artifact registry'
+inputs:
+  image:
+    description: "the name of the image"
+    required: true
+  app-path:
+    required: true
+    description: "Application path"
+  cloud-path:
+    required: true
+    description: "Cloud application path"
+  prefix-tag:
+    required: false
+    description: "Prefixed used in alpha for the tag image"
+    default: ""
+  hostname:
+    required: false
+    description: "GCP registry host name"
+    default: "europe-west1-docker.pkg.dev"
+  gcp-project-id:
+    required: false
+    description: "GCP project"
+    default: "ps-data-shared-artifacts"
+  gcp-credentials:
+    required: true
+    description: "GCP services account credentials"
+  repository:
+    required: true
+    description: "registry  repository"
+  environment:
+    required: false
+    description: "Application environment (integration / production)"
+    default: "integration"
+  docker-file-name:
+    required: false
+    description: "docker file name"
+    default: "Dockerfile"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Get tag
+      shell: bash
+      id: get_tag
+      run: echo ::set-output name=TAG::$PREFIX_TAG$(echo $GITHUB_REF | cut -d / -f 3)
+      env:
+        PREFIX_TAG: ${{ inputs.prefix-tag }}
+
+    - name: Build and push final image
+      shell: bash
+      working-directory: ${{ inputs.app-path }}
+      run: |
+        docker build \
+          --file="${DOCKER_FILE_NAME}" \
+          --build-arg ENVIRONMENT=${ENVIRONMENT} \
+          --tag="${HOST_NAME}/${GCP_PROJECT_ID}/${REPOSITORY}/${IMAGE}:latest" \
+          --tag="${HOST_NAME}/${GCP_PROJECT_ID}/${REPOSITORY}/${IMAGE}:${TAG}" .
+        docker push -a "${HOST_NAME}/${GCP_PROJECT_ID}/${REPOSITORY}/${IMAGE}"
+      env:
+        APP_PATH: ${{ inputs.app-path }}
+        HOST_NAME: ${{ inputs.hostname }}
+        GCP_PROJECT_ID: ${{ inputs.gcp-project-id }}
+        REPOSITORY: ${{ inputs.repository }}
+        IMAGE: ${{ inputs.image }}
+        TAG: ${{ steps.get_tag.outputs.TAG }}
+        ENVIRONMENT: ${{ inputs.environment }}
+        DOCKER_FILE_NAME: ${{ inputs.docker-file-name }}
