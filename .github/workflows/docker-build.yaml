@@ -35,7 +35,7 @@ jobs:
     - name: Publish python package
       env: 
         TWINE_PASSWORD : ${{ secrets.PYPI_API_TOKEN }}
-      run: python -m twine upload -u __token__ --non-interactive --repository-url https://upload.pypi.org/legacy/ dist/*
+      run: python -m twine upload -u __token__ --non-interactive  --skip-existing --repository-url https://upload.pypi.org/legacy/ dist/*
     
     - name: Set package version
       id : python_package_vars
@@ -45,7 +45,6 @@ jobs:
     
     - name: Print package version
       run: echo ${{ steps.python_package_vars.outputs.package_version }}
-
 
     - name: Docker meta
       id: meta
