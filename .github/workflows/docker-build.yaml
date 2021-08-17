@@ -44,7 +44,7 @@ jobs:
         echo "::set-output name=package_version::$(cat /tmp/version.json | jq .info.version)"
     
     - name: Print package version
-      run: echo "${{ steps.vars.outputs.package_version }}"
+      run: echo ${{ steps.vars.outputs.package_version }}
 
 
     # - name: Docker meta
