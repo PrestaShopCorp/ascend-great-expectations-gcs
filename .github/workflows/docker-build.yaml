@@ -41,7 +41,7 @@ jobs:
       id : vars
       run: |
         curl -s 'https://pypi.org/pypi/ascend-great-expectations-gcs/json' > /tmp/version.json
-        echo "::set-output name=package_version::$(cat /tmp/version.json | jq .info.version)"
+        echo "::set-output name=package_version::$(cat /tmp/version.json | jq -r .info.version)"
     
     - name: Print package version
       run: echo ${{ steps.vars.outputs.package_version }}
