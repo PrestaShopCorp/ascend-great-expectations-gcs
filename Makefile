@@ -1,6 +1,7 @@
 .PHONY: build
 
 build:
+	@ rm -rf ./dist
 	@python3 -m build
 
 publish: build
