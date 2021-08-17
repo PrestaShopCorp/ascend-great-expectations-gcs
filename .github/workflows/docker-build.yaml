@@ -49,6 +49,7 @@ jobs:
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+        build-args : "0.1.2"
 
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
