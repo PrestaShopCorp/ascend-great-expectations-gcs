@@ -23,7 +23,7 @@ jobs:
     - name: Set up Python 3.7
       uses: actions/setup-python@v2
       with:
-      python-version: '3.7'
+       python-version: '3.7'
     - name: Build and publish python package
       id: python_package
       uses: ./.github/actions/build_publish
