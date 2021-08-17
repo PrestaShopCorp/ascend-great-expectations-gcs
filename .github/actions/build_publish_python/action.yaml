@@ -10,6 +10,11 @@ inputs:
     description: "package name"
     default: ""
 
+outputs:
+  package-version: 
+    description: "package version"
+    value: ${{ steps.python_package.outputs.package_version }}
+    
 runs:
   using: "composite"
   steps:
