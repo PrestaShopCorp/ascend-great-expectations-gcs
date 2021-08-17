@@ -20,7 +20,7 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-      
+
     - name: Set up Python 3.7
       uses: actions/setup-python@v2
       with:
@@ -28,7 +28,7 @@ jobs:
 
     - name: Build and publish python package
       id: python_package
-      uses: ./.github/actions/build_publish
+      uses: ${{github.action_path}}/build_publish
       with: 
         pypi-token: ${{ secrets.PYPI_API_TOKEN }}
         package-name: ascend-great-expectations-gcs
