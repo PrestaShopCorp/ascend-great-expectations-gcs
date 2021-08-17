@@ -76,4 +76,4 @@ jobs:
     # - name: Image digest
     #   run: echo ${{ steps.docker_build.outputs.digest }}
     # curl https://pypi.org/pypi/ascend-great-expectations-gcs/json
-    curl -s 'https://pypi.org/pypi/ascend-great-expectations-gcs/json' | python3 -c "import sys, json; print(json.load(sys.stdin)['info']['version'])"
+    # curl -s 'https://pypi.org/pypi/ascend-great-expectations-gcs/json' | python3 -c "import sys, json; print(json.load(sys.stdin)['info']['version'])"
