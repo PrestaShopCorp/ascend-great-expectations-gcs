@@ -65,7 +65,7 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         build-args: |
-          PACKAGE_VERSION=${{ steps.python_package_vars.outputs.package_version }}
+          PACKAGE_VERSION=${{ steps.python_package.outputs.package-version }}
 
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
