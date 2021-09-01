@@ -53,3 +53,13 @@ def transform(spark_session: SparkSession, inputs: List[DataFrame], credentials=
     validator.run(df)
     return df
 ```
+
+## test the class
+
+create a virtual env
+then in ./venv/lib/python3.9/site-package write those two files
+
+ascend_great_expectations_gcs_test.pth => set you package folder path
+ascend_great_expectations_gcs.pth => set you package folder path here
+
+https://webdevdesigner.com/q/how-do-you-set-your-pythonpath-in-an-already-created-virtualenv-55773/
