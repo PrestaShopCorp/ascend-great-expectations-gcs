@@ -6,7 +6,7 @@ from ascend_great_expectations_gcs.validator import GEValidator
 
 os.environ["DATABRICKS_RUNTIME_VERSION"] = "ASCEND"
 
-with open(".secrets/credentials.json", "r") as file:
+with open("../.secrets/credentials.json", "r") as file:
     credentials = file.read()
 
 
