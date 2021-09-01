@@ -27,6 +27,15 @@ class TestValidator:
             validator.expect_column_values_to_not_be_null("language")
         return register_expectations
 
+    def test_run_checkpoint(self):
+        validator = self.make_validator()
+
+        expectations = self.make_expectations()
+        validator.add_expectations(expectations)
+
+        df = self.make_df()
+        validator.run_checkpoint(df)
+
     def test_run(self):
         validator = self.make_validator()
 

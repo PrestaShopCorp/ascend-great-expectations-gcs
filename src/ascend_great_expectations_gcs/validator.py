@@ -169,9 +169,43 @@ class GEValidator:
             batch_request=runtime_batch_request,
         )
 
-    def run(self, df: DataFrame, run_id: str = None):
+    def _create_checkpoint(self, checkpoint_name: str,expectation_suite_name: str, batch_request: RuntimeBatchRequest) -> Validator:
+        self._context.run_checkpoint(
+            checkpoint_name=checkpoint_name,
+            validations = [
+                {
+                    "batch_request" : batch_request,
+                    "index" : -1,
+                    "expectation_suite_name": expectation_suite_name
+                }
+            ]
+        )
+        return True
+
+    def run_checkpoint(self, df: DataFrame, run_id: str = None, slack_webhook: str = None, notify_on: str = "failure"):
         if run_id is None:
             run_id = uuid.uuid4().hex
+        
+        batch_request = self._create_batch_request(df, run_id)
+        validator = self._get_validator(batch_request)
+
+        if self._register_expectations is not None:
+            self._register_expectations(validator)
+
+        self._context.run_checkpoint(
+            slack_webhook = slack_webhook,
+            notify_on = notify_on,
+            checkpoint_name = self._name,
+            validations=[
+                {
+                    "expectation_suite_name" : self._name,
+                    "batch_request": batch_request
+                }
+            ]
+        )
+        
+
+    def run(self, df: DataFrame, run_id: str = None):
 
         batch_request = self._create_batch_request(df, run_id)
         validator = self._get_validator(batch_request)
