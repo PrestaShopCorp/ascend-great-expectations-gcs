@@ -17,9 +17,10 @@ class GEValidator:
             raise ValueError("Credentials not found.")
 
         config = self._authenticate(credentials, credentials_file_name)
-        gcp_project, bucket = self._parse_config(config)
+        gcp_project, bucket,slack_webhook = self._parse_config(config)
 
         self._name = name
+        self.slack_webhook = slack_webhook
         self._context = self._create_data_context(gcp_project, bucket)
         self._suite = self._create_expectation_suite(self._name)
 
@@ -52,7 +53,9 @@ class GEValidator:
         if bucket is None:
             raise ValueError("Missing Great Expectations bucket")
 
-        return project, bucket
+        slack_webhook = config.get("slack_webhook", "")
+
+        return project, bucket,slack_webhook
 
     def _create_data_context_config(self,
                                     gcp_project: str,
@@ -182,7 +185,7 @@ class GEValidator:
         )
         return True
 
-    def run_checkpoint(self, df: DataFrame, run_id: str = None, slack_webhook: str = None, notify_on: str = "failure"):
+    def run_checkpoint(self, df: DataFrame, run_id: str = None, notify_on: str = "failure"):
         if run_id is None:
             run_id = uuid.uuid4().hex
         
@@ -193,7 +196,7 @@ class GEValidator:
             self._register_expectations(validator)
 
         self._context.run_checkpoint(
-            slack_webhook = slack_webhook,
+            slack_webhook = self.slack_webhook,
             notify_on = notify_on,
             checkpoint_name = self._name,
             validations=[
