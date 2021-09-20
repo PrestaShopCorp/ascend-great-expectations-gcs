@@ -59,7 +59,8 @@ class GEValidator:
                                     bucket: str,
                                     expectations_prefix="expectations",
                                     validations_prefix="validations",
-                                    data_docs_prefix="data_docs"
+                                    data_docs_prefix="data_docs",
+                                    validation_results_limit=100,
                                     ) -> DataContextConfig:
 
         config = DataContextConfig(
@@ -115,6 +116,7 @@ class GEValidator:
                     },
                     "site_index_builder": {
                         "class_name": "DefaultSiteIndexBuilder",
+                        "validation_results_limit": validation_results_limit
                     },
                 }
             },
