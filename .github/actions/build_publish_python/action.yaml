@@ -32,10 +32,21 @@ runs:
     env: 
       TWINE_PASSWORD : ${{ inputs.pypi-token }}
     run: python -m twine upload -u __token__ --non-interactive  --skip-existing --repository-url https://upload.pypi.org/legacy/ dist/*
-  
-  - name: Set package version
+
+  - name: Local install
     shell: bash
-    id : python_package
-    run: |
-      curl -s 'https://pypi.org/pypi/${{ inputs.package-name }}/json' > /tmp/version.json
-      echo "::set-output name=package_version::$(cat /tmp/version.json | jq -r .info.version)"
+    id : local_install
+    run: pip install toml
+  
+  # - name: Inline python step
+  #   run: |
+  #     import toml
+  #     print (toml.load("./setup.cfg"))
+  #   shell: python
+  
+  # - name: Set package version
+  #   shell: bash
+  #   id : python_package
+  #   run: |
+  #     curl -s 'https://pypi.org/pypi/${{ inputs.package-name }}/json' > /tmp/version.json
+  #     echo "::set-output name=package_version::$(cat /tmp/version.json | jq -r .info.version)"
