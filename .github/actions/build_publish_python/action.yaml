@@ -32,13 +32,13 @@ runs:
       TWINE_PASSWORD : ${{ inputs.pypi-token }}
     run: python -m twine upload -u __token__ --non-interactive  --skip-existing --repository-url https://upload.pypi.org/legacy/ dist/*
 
-   - name: Read package version
-     run: |
-          import configparser
-          config = configparser.ConfigParser()
-          config.read('setup.cfg')
-          print(config['metadata']['version'])
-      shell: python
+  - name: Read package version
+    shell: python
+    run: |
+      import configparser
+      config = configparser.ConfigParser()
+      config.read('setup.cfg')
+      print(config['metadata']['version'])
   
   # - name: Set package version
   #   shell: bash
