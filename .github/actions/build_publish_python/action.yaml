@@ -33,17 +33,22 @@ runs:
       TWINE_PASSWORD : ${{ inputs.pypi-token }}
     run: python -m twine upload -u __token__ --non-interactive  --skip-existing --repository-url https://upload.pypi.org/legacy/ dist/*
 
-  - name: Local install
+   - name: Read package version
+      run: |
+        import configparser
+        config = configparser.ConfigParser()
+        config.read('setup.cfg')
+        with open("/tmp/version.txt", "w") as f:
+            f.write(config['metadata']['version'])
+            f.close()
+      shell: python
+  
+  - name: Set package version
     shell: bash
-    id : local_install
-    run: pip install toml
-  
-  # - name: Inline python step
-  #   run: |
-  #     import toml
-  #     print (toml.load("./setup.cfg"))
-  #   shell: python
-  
+    id : python_package
+    run: |
+      echo "::set-output name=package_version::$(cat /tmp/version.txt)"
+
   # - name: Set package version
   #   shell: bash
   #   id : python_package

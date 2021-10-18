@@ -25,30 +25,17 @@ jobs:
       uses: actions/setup-python@v2
       with:
        python-version: '3.7'
-    
-    - name: Local install
-      shell: bash
-      id : local_install
-      run: pip install toml
 
-    - name: Inline python step
-      run: |
-        import configparser
-        config = configparser.ConfigParser()
-        config.read('setup.cfg')
-        print(config['metadata']['version'])
-      shell: python
-  
 
-    # - name: Build and publish python package
-    #   id: python_package
-    #   uses: ./.github/actions/build_publish_python
-    #   with: 
-    #     pypi-token: ${{ secrets.PYPI_API_TOKEN }}
-    #     package-name: ascend-great-expectations-gcs
+    - name: Build and publish python package
+      id: python_package
+      uses: ./.github/actions/build_publish_python
+      with: 
+        pypi-token: ${{ secrets.PYPI_API_TOKEN }}
+        package-name: ascend-great-expectations-gcs
     
-    # - name: Print package version
-    #   run: echo ${{ steps.python_package.outputs.package-version }}
+    - name: Print package version
+      run: echo ${{ steps.python_package.outputs.package-version }}
 
     # - name: Docker meta
     #   id: meta
