@@ -38,10 +38,12 @@ runs:
       import configparser
       config = configparser.ConfigParser()
       config.read('setup.cfg')
-      print(config['metadata']['version'])
+      with open("/tmp/version.txt", "w") as f:
+              f.write(config['metadata']['version'])
+              f.close()
   
-  # - name: Set package version
-  #   shell: bash
-  #   id : python_package
-  #   run: |
-  #     echo "::set-output name=package_version::$(cat /tmp/version.txt)"
+  - name: Set package version
+    shell: bash
+    id : python_package
+    run: |
+      echo "::set-output name=package_version::$(cat /tmp/version.txt)"
