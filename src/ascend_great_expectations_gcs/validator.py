@@ -12,7 +12,7 @@ import os
 
 
 class GEValidator:
-    def __init__(self, name: str, credentials: str = None, credentials_file_name="/tmp/google_credentials.json"):
+    def __init__(self, name: str, credentials: str = None, validation_results_limit= 30, credentials_file_name="/tmp/google_credentials.json"):
         if credentials is None:
             raise ValueError("Credentials not found.")
 
@@ -21,7 +21,7 @@ class GEValidator:
 
         self._name = name
         self.slack_webhook = slack_webhook
-        self._context = self._create_data_context(gcp_project, bucket)
+        self._context = self._create_data_context(gcp_project, bucket,validation_results_limit)
         self._suite = self._create_expectation_suite(self._name)
 
     def _authenticate(self, credentials: str, file_name: str):
@@ -62,9 +62,9 @@ class GEValidator:
                                     bucket: str,
                                     expectations_prefix="expectations",
                                     validations_prefix="validations",
-                                    data_docs_prefix="data_docs"
+                                    data_docs_prefix="data_docs",
+                                    validation_results_limit = 30,
                                     ) -> DataContextConfig:
-
         config = DataContextConfig(
             datasources={
                 "df": {
@@ -118,6 +118,7 @@ class GEValidator:
                     },
                     "site_index_builder": {
                         "class_name": "DefaultSiteIndexBuilder",
+                        "validation_results_limit": validation_results_limit
                     },
                 }
             },
@@ -140,8 +141,8 @@ class GEValidator:
         )
         return config
 
-    def _create_data_context(self, gcp_project: str, bucket: str) -> DataContext:
-        config = self._create_data_context_config(gcp_project, bucket)
+    def _create_data_context(self, gcp_project: str, bucket: str, validation_results_limit) -> DataContext:
+        config = self._create_data_context_config(gcp_project, bucket, validation_results_limit= validation_results_limit)
         context = BaseDataContext(project_config=config)
         return context
 
@@ -185,4 +186,4 @@ class GEValidator:
             "action_list_operator", assets_to_validate=[validator], run_id=run_id)
 
     def build_data_docs(self):
-        self._context.build_data_docs(site_names=[])
+        self._context.build_data_docs()
