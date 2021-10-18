@@ -34,7 +34,7 @@ runs:
     run: python -m twine upload -u __token__ --non-interactive  --skip-existing --repository-url https://upload.pypi.org/legacy/ dist/*
 
    - name: Read package version
-      run: |
+     run: |
         import configparser
         config = configparser.ConfigParser()
         config.read('setup.cfg')
@@ -48,10 +48,3 @@ runs:
     id : python_package
     run: |
       echo "::set-output name=package_version::$(cat /tmp/version.txt)"
-
-  # - name: Set package version
-  #   shell: bash
-  #   id : python_package
-  #   run: |
-  #     curl -s 'https://pypi.org/pypi/${{ inputs.package-name }}/json' > /tmp/version.json
-  #     echo "::set-output name=package_version::$(cat /tmp/version.json | jq -r .info.version)"
