@@ -34,7 +34,8 @@ jobs:
     - name: Inline python step
       run: |
         import toml
-        print (toml.load("./setup.cfg"))
+        data = toml.load("./setup.cfg")
+        print(data)
       shell: python
   
 
