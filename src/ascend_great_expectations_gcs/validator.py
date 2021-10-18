@@ -12,9 +12,12 @@ import os
 
 
 class GEValidator:
-    def __init__(self, name: str, credentials: str = None, validation_results_limit= 30, credentials_file_name="/tmp/google_credentials.json"):
+    def __init__(self, name: str, credentials: str = None, validation_results_limit: int= None, credentials_file_name="/tmp/google_credentials.json"):
         if credentials is None:
             raise ValueError("Credentials not found.")
+
+        if validation_results_limit is None:
+            raise ValueError("validation_results_limit not found.")
 
         config = self._authenticate(credentials, credentials_file_name)
         gcp_project, bucket,slack_webhook = self._parse_config(config)
