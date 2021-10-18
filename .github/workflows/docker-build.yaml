@@ -33,9 +33,10 @@ jobs:
 
     - name: Inline python step
       run: |
-        import toml
-        data = toml.load("./setup.cfg")
-        print(data)
+        import configparser
+        config = configparser.ConfigParser()
+        config.read('setup.cfg')
+        print(config['metadata'])
       shell: python
   
 
