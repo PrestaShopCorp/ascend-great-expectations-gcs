@@ -185,4 +185,4 @@ class GEValidator:
             "action_list_operator", assets_to_validate=[validator], run_id=run_id)
 
     def build_data_docs(self):
-        self._context.build_data_docs()
+        self._context.build_data_docs(site_names=[])
