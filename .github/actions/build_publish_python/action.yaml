@@ -37,9 +37,7 @@ runs:
           import configparser
           config = configparser.ConfigParser()
           config.read('setup.cfg')
-          with open("/tmp/version.txt", "w") as f:
-              f.write(config['metadata']['version'])
-              f.close()
+          print(config['metadata']['version'])
       shell: python
   
   # - name: Set package version
