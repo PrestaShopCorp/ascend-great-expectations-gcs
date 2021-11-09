@@ -66,7 +66,7 @@ class GEValidator:
                                     expectations_prefix="expectations",
                                     validations_prefix="validations",
                                     data_docs_prefix="data_docs",
-                                    validation_results_limit = 30,
+                                    validation_results_limit = None,
                                     ) -> DataContextConfig:
         config = DataContextConfig(
             datasources={
@@ -121,7 +121,6 @@ class GEValidator:
                     },
                     "site_index_builder": {
                         "class_name": "DefaultSiteIndexBuilder",
-                        "validation_results_limit": validation_results_limit
                     },
                 }
             },
@@ -142,6 +141,8 @@ class GEValidator:
             },
             anonymous_usage_statistics={"enabled": False}
         )
+        if validation_results_limit is not None:
+            config.data_docs_sites.site.site_index_builder.validation_results_limit = validation_results_limit
         return config
 
     def _create_data_context(self, gcp_project: str, bucket: str, validation_results_limit) -> DataContext:
