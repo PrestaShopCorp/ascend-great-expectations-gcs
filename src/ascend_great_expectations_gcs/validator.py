@@ -16,9 +16,6 @@ class GEValidator:
         if credentials is None:
             raise ValueError("Credentials not found.")
 
-        if validation_results_limit is None:
-            raise ValueError("validation_results_limit not found.")
-
         config = self._authenticate(credentials, credentials_file_name)
         gcp_project, bucket,slack_webhook = self._parse_config(config)
 
