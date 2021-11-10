@@ -7,7 +7,6 @@ on:
 
 env:
   IMAGE: 'prestashopcorp/ascend-great-expectations-gcs'
-
 jobs:
 
  build_ascend_ge_image:
