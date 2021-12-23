@@ -3,4 +3,4 @@ ARG PACKAGE_VERSION
 ENV PACKAGE_VERSION=${PACKAGE_VERSION}
 ENV DATABRICKS_RUNTIME_VERSION=ASCEND
 
-RUN pip install ascend-great-expectations-gcs==$PACKAGE_VERSION
+RUN pip install ascend-great-expectations-gcs==$PACKAGE_VERSION tld
