@@ -4,3 +4,4 @@ pyspark
 pandas
 autopep8
 pytest
+looker_sdk
